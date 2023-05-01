@@ -1,6 +1,9 @@
 import { createContext, useContext  } from "react";
 import { useState } from "react";
-import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { 
+  useLocation, Navigate, 
+  Outlet, useNavigate
+} from "react-router-dom";
 
 import { appAuthProvider } from '../auth.js';
 
@@ -9,35 +12,39 @@ const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthStatus = function () {
-    let auth = useAuth();
-    let navigate = useNavigate();
-  
-    if (!auth.user) {
-      return <p>You are not logged in.</p>;
-    }
-  
-    return (
-      <p>
-        Welcome {auth.user}!{" "}
-        <button
-          onClick={() => {
-            auth.signout(() => navigate("/"));
-          }}
-        >
-          Sign out
-        </button>
-      </p>
-    );
+  let auth = useAuth();
+  let navigate = useNavigate();
+
+  if (!auth.user) {
+    return <p>You are not logged in.</p>;
   }
+
+  return (
+    <p>
+      Welcome {auth.user}!{" "}
+      <button
+        onClick={() => {
+          auth.signout(() => navigate("/"));
+        }}
+      >
+        Sign out
+      </button>
+    </p>
+  );
+}
 
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [jwt, setJwt] = useState(null);
 
-    let signin = (newUse, callback) => {
-        return appAuthProvider.signin(() => {
-          setUser(newUser);
-          callback();
+    let signin = (newUser, callback) => {
+        return appAuthProvider.signin(newUser, ({response, isAuthenticated}) => {
+          setUser(newUser.username);
+          if(response.token) { 
+            setJwt(jwt);
+          };
+          callback({response, isAuthenticated});
         });
       };
 
@@ -50,8 +57,9 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ user, signin, signout }}>
+        <AuthContext.Provider value={{ user, jwt, signin, signout }}>
             {children}
+            {/* <Outlet /> ???? */}
         </AuthContext.Provider>
     );
 };

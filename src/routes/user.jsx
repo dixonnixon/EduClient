@@ -15,7 +15,7 @@ export async function action() {
   return { user };
 }
 
-export default function Users() {
+export default function User() {
     const { users } = useLoaderData();
 
 

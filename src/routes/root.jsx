@@ -5,22 +5,25 @@ import { Outlet, Link,
   Form, useNavigate 
 } from "react-router-dom";
 
-import { getContacts, createContact } from "../contacts";
-import { useAuth } from "../context/Auth";
-
+import { getUsers, createUser } from "../users";
+import { useAuth, AuthProvider } from "../context/Auth"
+import localforage from "localforage";
 
 export async function loader() {
-    const contacts = await getContacts('all');
-    return { contacts };
+    let auth = useAuth();
+    console.log("token", auth);
+    // localforage.setItem(auth.jwt);
+    const users = await getUsers('all');
+    return { users };
 }
 
 export async function action() {
-  const contact = await createContact();
+  const contact = await createUser();
   return { contact };
 }
 
 export default function Root() {
-    const { contacts } = useLoaderData();
+    const { users } = useLoaderData();
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
@@ -67,19 +70,18 @@ export default function Root() {
             </Form>
           </div>
           <nav>
-            {contacts.length ? (
+            {users.length ? (
                 <ul>
-                {contacts.map((contact) => (
-                    <li key={contact.id}>
-                    <Link to={`contacts/${contact.id}`}>
-                        {contact.first || contact.last ? (
+                {users.map((user) => (
+                    <li key={user.id}>
+                    <Link to={`users/${user.id}`}>
+                        {user.first || user.last ? (
                         <>
-                            {contact.first} {contact.last}
+                            {user.first} {user.last}
                         </>
                         ) : (
                         <i>No Name</i>
                         )}{" "}
-                        {contact.favorite && <span>★</span>}
                     </Link>
                     </li>
                 ))}

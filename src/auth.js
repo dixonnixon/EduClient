@@ -1,6 +1,7 @@
 const appAuthProvider = {
     isAuthenticated: false,
-    async signin(callback) {
+    async signin({username, password}, callback) {
+        console.log(username, password);
         const response = await fetch('https://10.1.0.16:443/users/login', {
             method: "POST",
             cache: "no-cache", 
@@ -10,14 +11,16 @@ const appAuthProvider = {
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify({
-                username: 'su',
-                password: 'su'
+                username: username,
+                password: password
             })
         });
         const data = await response.json();
         console.log(data);
         
         appAuthProvider.isAuthenticated = true;
+        // callback(data);
+        callback({ response: data, isAuthenticated: appAuthProvider.isAuthenticated });
       // setTimeout(callback, 100); // fake async
     },
 

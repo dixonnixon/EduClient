@@ -1,5 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
 import {
   createBrowserRouter,
   RouterProvider
@@ -14,36 +15,71 @@ import Root, {
   action as rootAction,
 } from "./routes/root";
 
+
+
 import { AuthProvider, RequireAuth } from "./context/Auth";
 
+import Layout from './pages/Layout'
 
 import Unauthorized from './pages/unauthoorized'
 import ErrorPage from "./pages/error-page";
-import Contact, {
-  loader as contactLoader,
-} from "./routes/contact";
-import Users from "./routes/users"; 
+// import Contact, {
+//   loader as contactLoader,
+// } from "./routes/contact";
+import User, {
+  loader as userLoader,
+} from "./routes/user";
+
+
+
 import SpinnerOfDoom from "./routes/spinner"; 
-import Login from "./pages/Login"
+import Login, {
+  action as authAction
+} from "./routes/login"
+
+
 
 const router = createBrowserRouter([
   {
+    // path: "/",
+    // element:  <RequireAuth  />,
+    // errorElement: <ErrorPage />,
+    // loader: rootLoader,
+    // action: rootAction,
+    // children: [
+    //   {
+    //     path: "portal/",
+    //     element: <Root />,
+    //     loader: contactLoader,
+    //   },
+    //   {
+    //     path: '/users',
+    //     element: <Users />,
+    //     errorElement: <ErrorPage />,
+    //   },
+    // ]
     path: "/",
-    element:  <RequireAuth  />,
+    element:  <Layout  />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
     action: rootAction,
     children: [
       {
-        path: "portal/",
-        element: <Root />,
-        loader: contactLoader,
+        element: <RequireAuth />,
+        children: [
+          {
+            path: "/portal",
+            element: <Root />,
+            loader: userLoader,
+          },
+          // {
+          //   path: '/users',
+          //   element: <Users />,
+          //   errorElement: <ErrorPage />,
+          // },
+        ]
       },
-      {
-        path: '/users',
-        element: <Users />,
-        errorElement: <ErrorPage />,
-      },
+     
     ]
   },
   {
@@ -55,6 +91,7 @@ const router = createBrowserRouter([
     path: "/login",
     element:  <Login />,
     errorElement: <ErrorPage />,
+    action: authAction
   },
   
 ]);
