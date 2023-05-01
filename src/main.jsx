@@ -39,12 +39,12 @@ const router = createBrowserRouter([
         element: <Root />,
         loader: contactLoader,
       },
+      {
+        path: '/users',
+        element: <Users />,
+        errorElement: <ErrorPage />,
+      },
     ]
-  },
-  {
-    path: '/users',
-    element: <Users />,
-    errorElement: <ErrorPage />,
   },
   {
     path: "/unauthorized",

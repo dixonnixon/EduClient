@@ -18,8 +18,10 @@ const appAuthProvider = {
         console.log(data);
         
         appAuthProvider.isAuthenticated = true;
-      setTimeout(callback, 100); // fake async
+      // setTimeout(callback, 100); // fake async
     },
+
+
     async signout(callback) {
         appAuthProvider.isAuthenticated = false;
       setTimeout(callback, 100);
