@@ -10,8 +10,8 @@ import { useAuth, AuthProvider } from "../context/Auth"
 import localforage from "localforage";
 
 export async function loader() {
-    let auth = useAuth();
-    console.log("token", auth);
+    // let auth = useAuth();
+    // console.log("token", auth);
     // localforage.setItem(auth.jwt);
     const users = await getUsers('all');
     return { users };
