@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
     const [jwt, setJwt] = useState(null);
 
     let signin = (newUser, callback) => {
+        console.log("signin:", newUser);
         return appAuthProvider.signin(newUser, ({response, isAuthenticated}) => {
           setUser(newUser.username);
           if(response.token) { 

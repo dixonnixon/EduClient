@@ -1,7 +1,7 @@
 const appAuthProvider = {
     isAuthenticated: false,
     async signin({username, password}, callback) {
-        console.log(username, password);
+        console.log("signin", username, password);
         const response = await fetch('https://10.1.0.16:443/users/login', {
             method: "POST",
             cache: "no-cache", 
@@ -16,7 +16,7 @@ const appAuthProvider = {
             })
         });
         const data = await response.json();
-        console.log(data);
+        console.log("data", data);
         
         appAuthProvider.isAuthenticated = true;
         // callback(data);
