@@ -5,96 +5,114 @@ import { Outlet, Link,
   Form, useNavigate 
 } from "react-router-dom";
 
-import { getContacts, createContact } from "../contacts";
-import { useAuth } from "../context/Auth";
+// import { getContacts, createContact } from "../contacts";
+// import { useAuth } from "../context/Auth";
+import { useAuth  } from "../context/Auth";
 
 
 export async function loader() {
-    const contacts = await getContacts('all');
-    return { contacts };
+    // const contacts = await getContacts('all');
+    // return { contacts };
+    return {};
 }
 
 export async function action() {
-  const contact = await createContact();
-  return { contact };
+  // const contact = await createContact();
+  // return { contact };
 }
 
 export default function Root() {
-    const { contacts } = useLoaderData();
-    const { user, setUser } = useAuth();
-    const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth();
 
-    const logout = useCallback(
-      (e) => {
-        e.preventDefault();
-        setUser(null);
-        navigate("/");
-      },
-      [setUser]
-    );
+  return (
+    <div>
+      <h1>Home</h1>
+      {isLoggedIn ? (
+        <>
+          <p>Welcome! You are  logged in.</p>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <p>Please log in to access more features.</p>
+      )}
+    </div>
+  );
 
-    return (
-      <AuthProvider>
-        <nav className="menu">
-        Hello <strong>{user?.username}</strong>!
-        </nav>
-        <div id="sidebar">
-          <h1>React Router Contacts</h1>
-          <div>
-            <form id="search-form" role="search">
-              <input
-                id="q"
-                aria-label="Search contacts"
-                placeholder="Search"
-                type="search"
-                name="q"
-              />
-              <div
-                id="search-spinner"
-                aria-hidden
-                hidden={true}
-              />
-              <div
-                className="sr-only"
-                aria-live="polite"
-              ></div>
-            </form>
-            {/* <form method="post">
-              <button type="submit">New</button>
-            </form> */}
-            <Form method="post">
-              <button type="submit">New</button>
-            </Form>
-          </div>
-          <nav>
-            {contacts.length ? (
-                <ul>
-                {contacts.map((contact) => (
-                    <li key={contact.id}>
-                    <Link to={`contacts/${contact.id}`}>
-                        {contact.first || contact.last ? (
-                        <>
-                            {contact.first} {contact.last}
-                        </>
-                        ) : (
-                        <i>No Name</i>
-                        )}{" "}
-                        {contact.favorite && <span>★</span>}
-                    </Link>
-                    </li>
-                ))}
-                </ul>
-            ) : (
-                <p>
-                <i>No contacts</i>
-                </p>
-            )}
-          </nav>
-        </div>
-        <div id="detail">
+    // const { contacts } = useLoaderData();
+    // const { user, setUser } = useAuth();
+    // const navigate = useNavigate();
 
-            <Outlet />
-        </div>
-      </AuthProvider>
-    );
+    // const logout = useCallback(
+    //   (e) => {
+    //     e.preventDefault();
+    //     setUser(null);
+    //     navigate("/");
+    //   },
+    //   [setUser]
+    // );
+
+    // return (
+    //   <AuthProvider>
+    //     <nav className="menu">
+    //     Hello <strong>{user?.username}</strong>!
+    //     </nav>
+    //     <div id="sidebar">
+    //       <h1>React Router Contacts</h1>
+    //       <div>
+    //         <form id="search-form" role="search">
+    //           <input
+    //             id="q"
+    //             aria-label="Search contacts"
+    //             placeholder="Search"
+    //             type="search"
+    //             name="q"
+    //           />
+    //           <div
+    //             id="search-spinner"
+    //             aria-hidden
+    //             hidden={true}
+    //           />
+    //           <div
+    //             className="sr-only"
+    //             aria-live="polite"
+    //           ></div>
+    //         </form>
+    //         {/* <form method="post">
+    //           <button type="submit">New</button>
+    //         </form> */}
+    //         <Form method="post">
+    //           <button type="submit">New</button>
+    //         </Form>
+    //       </div>
+    //       <nav>
+    //         {contacts.length ? (
+    //             <ul>
+    //             {contacts.map((contact) => (
+    //                 <li key={contact.id}>
+    //                 <Link to={`contacts/${contact.id}`}>
+    //                     {contact.first || contact.last ? (
+    //                     <>
+    //                         {contact.first} {contact.last}
+    //                     </>
+    //                     ) : (
+    //                     <i>No Name</i>
+    //                     )}{" "}
+    //                     {contact.favorite && <span>★</span>}
+    //                 </Link>
+    //                 </li>
+    //             ))}
+    //             </ul>
+    //         ) : (
+    //             <p>
+    //             <i>No contacts</i>
+    //             </p>
+    //         )}
+    //       </nav>
+    //     </div>
+    //     <div id="detail">
+
+    //         <Outlet />
+    //     </div>
+    //   </AuthProvider>
+    // );
   }

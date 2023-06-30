@@ -17,18 +17,23 @@ import Root, {
 } from "./routes/root";
 
 import { AuthProvider, RequireAuth } from "./context/Auth";
+// import { AuthProvider } from "./context/Auth";
 
 
 import Unauthorized from './pages/unauthoorized'
 import ErrorPage from "./pages/error-page";
-import Contact, {
-  loader as contactLoader,
-} from "./routes/contact";
+// import Contact, {
+//   loader as contactLoader,
+// } from "./routes/contact";
 import Users from "./routes/users"; 
 import SpinnerOfDoom from "./routes/spinner"; 
 import Login, {
   action as loginAction
 } from "./pages/Login"
+
+import Profile from "./pages/Profile";
+import RouteGuard from "./pages/RouteGuard";
+
 
 const router = createBrowserRouter([
   {
@@ -39,9 +44,9 @@ const router = createBrowserRouter([
     action: rootAction,
     children: [
       {
-        path: "portal/",
+        path: "/portal",
         element: <Root />,
-        loader: contactLoader,
+        // loader: contactLoader,
       },
       {
         path: '/users',
@@ -59,6 +64,12 @@ const router = createBrowserRouter([
     path: "/login",
     element:  <Login />,
     action: loginAction,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/profile",
+    element:  <RouteGuard> <Profile /> </RouteGuard>,
+    // action: loginAction,
     errorElement: <ErrorPage />,
   },
   

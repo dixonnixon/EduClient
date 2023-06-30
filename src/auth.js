@@ -20,15 +20,16 @@ const appAuthProvider = {
                   password: passwd
               })
           });
+          const data = await response.json();
+          console.log("data", data);
+          // if(data.success && !data.err) {
+          //   appAuthProvider.isAuthenticated = true;
+          // }
+          callback(data);
         } catch (err) {
           console.error(`[ACTION ERROR]: ${err}`);
         }
-        const data = await response.json();
-        console.log("data", data);
-        if(data.success && !data.err) {
-          appAuthProvider.isAuthenticated = true;
-        }
-        callback();
+        
       // setTimeout(callback, 100); // fake async
     },
 

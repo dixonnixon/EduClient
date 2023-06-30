@@ -1,74 +1,100 @@
-import { createContext, useContext  } from "react";
-import { useState } from "react";
+// import { createContext, useContext  } from "react";
+import { createContext, useEffect, useState,  useContext } from "react";
 import { useLocation, Navigate, Outlet  } from "react-router-dom";
 
-import { appAuthProvider } from '../auth.js';
+// import { appAuthProvider } from '../auth.js';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+const useAuth = () => useContext(AuthContext);
 
-export const AuthStatus = function () {
-    let auth = useAuth();
-    let navigate = useNavigate();
+// export const AuthStatus = function () {
+//     let auth = useAuth();
+//     let navigate = useNavigate();
   
-    if (!auth.user) {
-      return <p>You are not logged in.</p>;
-    }
+//     if (!auth.user) {
+//       return <p>You are not logged in.</p>;
+//     }
   
-    return (
-      <p>
-        Welcome {auth.user}!{" "}
-        <button
-          onClick={() => {
-            auth.signout(() => navigate("/"));
-          }}
-        >
-          Sign out
-        </button>
-      </p>
-    );
-  }
+//     return (
+//       <p>
+//         Welcome {auth.user}!{" "}
+//         <button
+//           onClick={() => {
+//             auth.signout(() => navigate("/"));
+//           }}
+//         >
+//           Sign out
+//         </button>
+//       </p>
+//     );
+//   }
 
 
-export const AuthProvider = ({ children }) => {
+// function AuthProvider (props) {
+function AuthProvider ({children}) {
 
-    const [token, setToken_] = useState(localStorage.getItem("token"));
-    const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [isLoading, setIsLoading] = useState(true);
 
-    let signin = (newUser, callback) => {
-      console.log(user, newUser);
-        return appAuthProvider.signin(newUser, () => {
-          console.log(appAuthProvider);
 
-          if(appAuthProvider.isAuthenticated) {
-            setUser(newUser);
-            callback();
-          }
+    
+    // const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const storedJwt = localStorage.getItem("jwt");
+
+      console.log("storedJwt", storedJwt, isLoggedIn)
+      if (storedJwt) {
+        setIsLoggedIn(true);
+        setToken(storedJwt);
+      }
+      setIsLoading(false);
+    }, []);
+
+    console.log("AuthProvider", isLoggedIn);
+    // let signin = (newUser, callback) => {
+    const login = (jwtToken) => {
+      // console.log(user, newUser);
+      //   return appAuthProvider.signin(newUser, () => {
+      //     console.log(appAuthProvider);
+
+      //     if(appAuthProvider.isAuthenticated) {
+      //       setUser(newUser);
+      //       callback();
+      //     }
           
-        });
-      };
-
-    let signout = (callback) => {
-        return appAuthProvider.signout(() => {
-          setUser(null);
-          callback();
-        });
+      //   });
+      setIsLoggedIn(true);
+      setToken(jwtToken);
+      localStorage.setItem("jwt", jwtToken);
     };
 
+    const logout = () => {
+      setIsLoggedIn(false);
+      setToken(null);
+      localStorage.removeItem("jwt");
+    };
 
-    return (
-        <AuthContext.Provider value={{ user, signin, signout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+    const value = {
+      isLoggedIn,
+      isLoading,
+      login,
+      logout,
+    };
+
+    return <AuthContext.Provider value={value} >{children}</AuthContext.Provider> ;
 };
 
-export const RequireAuth = () => {
-    const { user } = useAuth();
+function RequireAuth () {
+    const { isLoggedIn } = useAuth();
+    
     const location = useLocation();
   
-    if (!user) {
+    console.log("RequireAuth", isLoggedIn);
+
+    if (!isLoggedIn) {
       return (
         <Navigate
           to={{ pathname: "/unauthorized", state: { from: location } }}
@@ -77,5 +103,7 @@ export const RequireAuth = () => {
       );
     }
   
-    return <Outlet />;
+    return <>hech:<nav></nav> <Outlet /></>;
 };
+
+export { AuthProvider,  RequireAuth, useAuth };
