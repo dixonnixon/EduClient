@@ -1,6 +1,6 @@
 import { createContext, useContext  } from "react";
 import { useState } from "react";
-import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { useLocation, Navigate, Outlet  } from "react-router-dom";
 
 import { appAuthProvider } from '../auth.js';
 
@@ -32,12 +32,20 @@ export const AuthStatus = function () {
 
 
 export const AuthProvider = ({ children }) => {
+
+    const [token, setToken_] = useState(localStorage.getItem("token"));
     const [user, setUser] = useState(null);
 
-    let signin = (newUse, callback) => {
-        return appAuthProvider.signin(() => {
-          setUser(newUser);
-          callback();
+    let signin = (newUser, callback) => {
+      console.log(user, newUser);
+        return appAuthProvider.signin(newUser, () => {
+          console.log(appAuthProvider);
+
+          if(appAuthProvider.isAuthenticated) {
+            setUser(newUser);
+            callback();
+          }
+          
         });
       };
 

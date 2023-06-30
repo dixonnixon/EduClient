@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
+
 import {
   createBrowserRouter,
   RouterProvider
@@ -7,7 +9,7 @@ import {
 
 import './index.css'
 
-
+process.env.NODE_ENV
 
 import Root, { 
   loader as rootLoader,
@@ -24,7 +26,9 @@ import Contact, {
 } from "./routes/contact";
 import Users from "./routes/users"; 
 import SpinnerOfDoom from "./routes/spinner"; 
-import Login from "./pages/Login"
+import Login, {
+  action as loginAction
+} from "./pages/Login"
 
 const router = createBrowserRouter([
   {
@@ -54,6 +58,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element:  <Login />,
+    action: loginAction,
     errorElement: <ErrorPage />,
   },
   
